@@ -1,38 +1,44 @@
-/*
-Exercise: Maps
-Implement WordCount. It should return a map of the counts of each “word” in the string s.
-The wc.Test function runs a test suite against the provided function and prints success or failure.
-
-You might find strings.Fields helpful.
-*/
-
 package main
 
 import (
 	"fmt"
-	"strings"
-
-	"golang.org/x/tour/wc"
+	"math"
 )
 
-func WordCount(s string) map[string]int {
+// compute calls passed function with parameters 3 & 4
+func compute(fn func(float64, float64) float64) float64 {
+	return fn(3, 4)
+}
 
-	splittedString := strings.Fields(s) //splitted string is a slice of words
-	fmt.Println()
-	fmt.Println(splittedString)
-
-	ret := make(map[string]int) //declaring a map to return
-
-	for totalWordsCounter := range splittedString { //iterating through every word
-		fmt.Println("Counted words:", totalWordsCounter+1)
-		ret[splittedString[totalWordsCounter]] += 1 //counting exactly the same words(incrementing the word counter) & filling the map with [word]wordCounter
+// function closures
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum //sum is not accessible inside main()
 	}
-
-	fmt.Println("returned map:", ret)
-	return ret
 }
 
 func main() {
-	//wc.Test runs a test and prints success or failure
-	wc.Test(WordCount)
+
+	//function values
+	hypot := func(x, y float64) float64 {
+		return math.Sqrt(x*x + y*y)
+	}
+
+	fmt.Println(hypot(5, 12))
+
+	fmt.Println(compute(hypot))
+	fmt.Println(compute(math.Pow))
+	fmt.Println()
+
+	//closured function calls
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println( //everything printed from here is a closure
+			pos(i),    //values of pos and neg is a closures, bc they are referencing adder() function calls
+			neg(-2*i), //adder() is located outside of the for loop scope and main() scope
+		)
+	}
+
 }
