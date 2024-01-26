@@ -1,48 +1,37 @@
+//slice exercise
+
+/*
+Implement Pic. It should return a slice of length dy, each element of which is a slice of dx 8-bit unsigned integers.\
+When you run the program, it will display your picture, interpreting the integers as grayscale (well, bluescale) values.
+
+The choice of image is up to you. Interesting functions include (x+y)/2, x*y, and x^y.
+
+(You need to use a loop to allocate each []uint8 inside the [][]uint8.)
+
+(Use uint8(intValue) to convert between types.)
+*/
+
 package main
 
 import (
-	"fmt"
+	"golang.org/x/tour/pic"
 )
 
-var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+// Pic creates the shape of an image based on a function (a string to be displayed at go playground website)
+func Pic(dx, dy int) [][]uint8 {
+	pictureSlice := make([][]uint8, dy)
 
-func main() {
-
-	//slice append
-	var s []int //len 0 cap 0 - nil slice
-	printSlice(s)
-
-	s = append(s, 0) //len 1 cap 1 - [0]
-	printSlice(s)
-
-	s = append(s, 1) //len 2 cap 2	- [0,1]
-	printSlice(s)
-
-	s = append(s, 2, 3, 4) //len 5 cap 6 - [0,1,2,3,4] - cap != 5 bc adding multiple elements
-	printSlice(s)
-
-	s = append(s, 5) //len 6 cap 6 - [0,1,2,3,4,5]
-	printSlice(s)
-	fmt.Println()
-
-	//range
-	for i, v := range pow { //range returns two values from pow every iteration
-		fmt.Printf("2**%d = %d\n", i, v)
+	for y := 0; y < dy; y++ {
+		partialPictureSlice := make([]uint8, dx)
+		for x := 0; x < dx; x++ {
+			partialPictureSlice[x] = uint8((x^y)*((x+y)/2) + (x * y)) //change this function
+		}
+		pictureSlice[y] = partialPictureSlice
 	}
-	fmt.Println()
 
-	//skipping value
-	pow = make([]int, 10)
-	for i := range pow {
-		pow[i] = 1 << uint(i) // pow[i] == 2**i
-	}
-	//skipping index
-	for _, value := range pow {
-		fmt.Printf("%d\n", value)
-	}
+	return pictureSlice
 }
 
-// printSlice displaying information about slice
-func printSlice(s []int) {
-	fmt.Printf("Length: %d Capacity: %d Content: %v\n", len(s), cap(s), s)
+func main() {
+	pic.Show(Pic)
 }
