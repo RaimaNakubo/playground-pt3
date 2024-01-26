@@ -1,37 +1,65 @@
-//slice exercise
-
-/*
-Implement Pic. It should return a slice of length dy, each element of which is a slice of dx 8-bit unsigned integers.\
-When you run the program, it will display your picture, interpreting the integers as grayscale (well, bluescale) values.
-
-The choice of image is up to you. Interesting functions include (x+y)/2, x*y, and x^y.
-
-(You need to use a loop to allocate each []uint8 inside the [][]uint8.)
-
-(Use uint8(intValue) to convert between types.)
-*/
-
 package main
 
 import (
-	"golang.org/x/tour/pic"
+	"fmt"
 )
 
-// Pic creates the shape of an image based on a function (a string to be displayed at go playground website)
-func Pic(dx, dy int) [][]uint8 {
-	pictureSlice := make([][]uint8, dy)
+type Vertex struct {
+	Lat, Long float64
+}
 
-	for y := 0; y < dy; y++ {
-		partialPictureSlice := make([]uint8, dx)
-		for x := 0; x < dx; x++ {
-			partialPictureSlice[x] = uint8((x^y)*((x+y)/2) + (x * y)) //change this function
-		}
-		pictureSlice[y] = partialPictureSlice
-	}
+// nil map
+var m map[string]Vertex
 
-	return pictureSlice
+// map literal
+var ml = map[string]Vertex{
+	"Bell Labs": Vertex{
+		40.68433, -74.39967,
+	},
+	"Google": Vertex{
+		37.42202, -122.08408,
+	},
+}
+
+// map literal omit type name
+var mlo = map[string]Vertex{
+	"Bell Labs": {40.68433, -74.39967},
+	"Google":    {37.42202, -122.08408},
 }
 
 func main() {
-	pic.Show(Pic)
+
+	//basic map syntax
+	m = make(map[string]Vertex)
+	m["Bell Labs"] = Vertex{ //key - "Bell Labs", value - Vertex{x,y}
+		40.68433, -74.39967,
+	}
+
+	fmt.Println(m["Bell Labs"])
+	fmt.Println()
+
+	fmt.Println(ml)
+	fmt.Println()
+
+	fmt.Println(mlo)
+	fmt.Println()
+
+	//mutating maps
+	mm := make(map[string]int)
+
+	mm["Answer"] = 42
+	fmt.Println("The Value:", mm["Answer"])
+
+	mm["Answer"] = 48
+	fmt.Println("The Value:", mm["Answer"])
+
+	delete(mm, "Answer")
+	fmt.Println("The Value:", mm["Answer"])
+
+	element, isPresent := mm["Answer"]
+	fmt.Println("The Value:", element, "is present?", isPresent)
+
+	mm["Answer"] = 0
+	element, isPresent = mm["Answer"]
+	fmt.Println("The Value:", element, "is present?", isPresent)
 }
