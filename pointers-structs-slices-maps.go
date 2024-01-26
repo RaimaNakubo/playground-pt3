@@ -1,65 +1,38 @@
+/*
+Exercise: Maps
+Implement WordCount. It should return a map of the counts of each “word” in the string s.
+The wc.Test function runs a test suite against the provided function and prints success or failure.
+
+You might find strings.Fields helpful.
+*/
+
 package main
 
 import (
 	"fmt"
+	"strings"
+
+	"golang.org/x/tour/wc"
 )
 
-type Vertex struct {
-	Lat, Long float64
-}
+func WordCount(s string) map[string]int {
 
-// nil map
-var m map[string]Vertex
+	splittedString := strings.Fields(s) //splitted string is a slice of words
+	fmt.Println()
+	fmt.Println(splittedString)
 
-// map literal
-var ml = map[string]Vertex{
-	"Bell Labs": Vertex{
-		40.68433, -74.39967,
-	},
-	"Google": Vertex{
-		37.42202, -122.08408,
-	},
-}
+	ret := make(map[string]int) //declaring a map to return
 
-// map literal omit type name
-var mlo = map[string]Vertex{
-	"Bell Labs": {40.68433, -74.39967},
-	"Google":    {37.42202, -122.08408},
+	for totalWordsCounter := range splittedString { //iterating through every word
+		fmt.Println("Counted words:", totalWordsCounter+1)
+		ret[splittedString[totalWordsCounter]] += 1 //counting exactly the same words(incrementing the word counter) & filling the map with [word]wordCounter
+	}
+
+	fmt.Println("returned map:", ret)
+	return ret
 }
 
 func main() {
-
-	//basic map syntax
-	m = make(map[string]Vertex)
-	m["Bell Labs"] = Vertex{ //key - "Bell Labs", value - Vertex{x,y}
-		40.68433, -74.39967,
-	}
-
-	fmt.Println(m["Bell Labs"])
-	fmt.Println()
-
-	fmt.Println(ml)
-	fmt.Println()
-
-	fmt.Println(mlo)
-	fmt.Println()
-
-	//mutating maps
-	mm := make(map[string]int)
-
-	mm["Answer"] = 42
-	fmt.Println("The Value:", mm["Answer"])
-
-	mm["Answer"] = 48
-	fmt.Println("The Value:", mm["Answer"])
-
-	delete(mm, "Answer")
-	fmt.Println("The Value:", mm["Answer"])
-
-	element, isPresent := mm["Answer"]
-	fmt.Println("The Value:", element, "is present?", isPresent)
-
-	mm["Answer"] = 0
-	element, isPresent = mm["Answer"]
-	fmt.Println("The Value:", element, "is present?", isPresent)
+	//wc.Test runs a test and prints success or failure
+	wc.Test(WordCount)
 }
