@@ -2,43 +2,45 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
-// compute calls passed function with parameters 3 & 4
-func compute(fn func(float64, float64) float64) float64 {
-	return fn(3, 4)
-}
-
-// function closures
-func adder() func(int) int {
-	sum := 0
-	return func(x int) int {
-		sum += x
-		return sum //sum is not accessible inside main()
+// fibonacci is a function that returns
+// a function that returns an int.
+func fibonacchi() func() int {
+	n1 := 0
+	n2 := 1
+	return func() int {
+		n1, n2 = n2, n1+n2
+		return n2 - n1
 	}
 }
 
 func main() {
-
-	//function values
-	hypot := func(x, y float64) float64 {
-		return math.Sqrt(x*x + y*y)
+	f := fibonacchi() //f is the instance of fibonacchi(); it returns a function with pre-set parameters, not a function call
+	for i := 0; i < 10; i++ {
+		fmt.Println(f()) //every time f() is called, parameters are NOT re-set to the beginning values bc fibonacchi call is not happening
+		//calling f() changes the parameters and returns resulting value
 	}
-
-	fmt.Println(hypot(5, 12))
-
-	fmt.Println(compute(hypot))
-	fmt.Println(compute(math.Pow))
 	fmt.Println()
 
-	//closured function calls
-	pos, neg := adder(), adder()
-	for i := 0; i < 10; i++ {
-		fmt.Println( //everything printed from here is a closure
-			pos(i),    //values of pos and neg is a closures, bc they are referencing adder() function calls
-			neg(-2*i), //adder() is located outside of the for loop scope and main() scope
-		)
+	//here is what it looks like if fibonacchi() is called instead
+	/*
+		for i := 0; i < 10; i++ {
+			fmt.Printf(fibonacchi()) // fmt.Println arg fibonacchi() is a func value, not called
+		}
+	*/
+
+	//if f() is called over and over, parameters are still not reset
+	for j := 0; j < 10; j++ {
+		fmt.Println(f())
 	}
+	fmt.Println()
+
+	//however if fibonacchi() is called again it will re-set the parameters; calculations will start from the beginning
+	f = fibonacchi()
+	for k := 0; k < 10; k++ {
+		fmt.Println(f())
+	}
+	fmt.Println()
 
 }
